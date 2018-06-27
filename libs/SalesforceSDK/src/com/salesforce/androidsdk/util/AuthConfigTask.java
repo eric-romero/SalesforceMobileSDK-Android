@@ -69,10 +69,12 @@ public class AuthConfigTask extends AsyncTask<Void, Void, Void> {
             SalesforceSDKManager.getInstance().setBrowserLoginEnabled(false);
             return null;
         }
-        final AuthConfigUtil.MyDomainAuthConfig authConfig = AuthConfigUtil.getMyDomainAuthConfig(loginServer);
         boolean browserLoginEnabled = false;
-        if (authConfig != null) {
-            browserLoginEnabled = authConfig.isBrowserLoginEnabled();
+        if ( android.webkit.URLUtil.isHttpsUrl(loginServer) && okhttp3.HttpUrl.parse(loginServer) != null) {
+            final AuthConfigUtil.MyDomainAuthConfig authConfig = AuthConfigUtil.getMyDomainAuthConfig(loginServer);
+            if (authConfig != null) {
+                browserLoginEnabled = authConfig.isBrowserLoginEnabled();
+            }
         }
         SalesforceSDKManager.getInstance().setBrowserLoginEnabled(browserLoginEnabled);
         return null;
